@@ -7,7 +7,7 @@ import csv
 import math
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from pyecharts.charts import WordCloud,Funnel
+from pyecharts.charts import WordCloud,Funnel,Line
 import numpy as np
 import seaborn as sns
 import pandas as pd
@@ -75,12 +75,22 @@ def index_soup(soup):
             else:
                 continue
 
+# def zhexian(word,number):
+#     fig=plt.figure()
+#     plt.title("折线图")
+#     plt.plot(word, number, 'b', marker='.', markersize=10)
+#     st.pyplot(fig)
+#     st.button("Re-run")
 def zhexian(word,number):
-    fig=plt.figure()
-    plt.title("折线图")
-    plt.plot(word, number, 'b', marker='.', markersize=10)
-    st.pyplot(fig)
-    st.button("Re-run")
+    line_chart = Line()
+    # 添加x轴坐标
+    line_chart.add_xaxis(word)
+    # 添加y轴坐标，不显示数据
+    line_chart.add_yaxis("", number, label_opts=opts.LabelOpts(is_show=False))
+    # 设置全局选项，包括标题等
+    line_chart.set_global_opts(title_opts=opts.TitleOpts(title="折线图"))
+    ste.st_pyecharts(line_chart)
+
 
 def zx(word,number):
     fig=plt.figure()
@@ -89,7 +99,7 @@ def zx(word,number):
     ax.bar(word, number, width=0.3, color='blue')
     st.pyplot(fig)
     st.button("Re-run")
-
+   
 def bz(word,number):
     fig=plt.figure()
     plt.title("饼状图")
