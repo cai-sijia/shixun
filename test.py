@@ -2,19 +2,9 @@ import requests
 import streamlit as st
 from bs4 import BeautifulSoup
 import jieba
-from collections import Counter
-import csv
-import math
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from pyecharts.charts import WordCloud,Funnel,Line,Bar,Pie
+from pyecharts.charts import WordCloud,Funnel,Line,Bar,Pie,Scatter,Radar
 from pyecharts.faker import Faker
 from pyecharts.options import LabelOpts
-import numpy as np
-import seaborn as sns
-import pandas as pd
-from matplotlib.font_manager import FontProperties 
-import matplotlib
 import streamlit_echarts as ste
 from pyecharts import options as opts
 import re
@@ -37,10 +27,7 @@ def index_soup(soup):
     items.sort(key=lambda x: x[1], reverse=True)
     word=[key for key, value in items[:20:]]
     number= [value for key, value in items[:20:]]
-    matplotlib.rcParams['font.family'] = 'SimHei'  # 设置为中文字体
-    plt.rcParams["font.sans-serif"]=["SimHei"] #设置字体
-    plt.rcParams["axes.unicode_minus"]=False #该语句解决图像中的“-”负号的乱码问题
-    plot_types = ("折线图","柱状图","饼状图" ,"散点图","词云图","漏斗图","蜘蛛图") # 选择绘制的图表种类 
+    plot_types = ("折线图","柱状图","饼状图" ,"散点图","词云图","漏斗图","雷达图") # 选择绘制的图表种类 
     chart_type = st.sidebar.selectbox("选择图表类型：", plot_types)
     if chart_type=='折线图':
         zhexian(word,number)
@@ -54,7 +41,7 @@ def index_soup(soup):
         cy(items)
     elif chart_type=='漏斗图':
         ld(word,number)
-    elif chart_type=='蜘蛛图':
+    elif chart_type=='雷达图':
         zz(word,number)
     select_option=("全部词频的统计","前二十的词频","过滤后低频词(次数小于等于5)")
     selected_option=st.sidebar.selectbox("展示",select_option)
@@ -105,12 +92,11 @@ def bz(word,number):
     ste.st_pyecharts(pie)
 
 def sd(word,number):
-   fig=plt.figure()
-   plt.title("散点图")
-   plt.scatter(word,number)
-   st.pyplot(fig)
+   sca = Scatter()
+   sca.add_xaxis(word)
+   sca.add_yaxis("散点图",number)
+   ste.st_pyecharts(sca)
    
-
 
 def cy(data):
     wc=WordCloud()
@@ -123,19 +109,15 @@ def ld(word,number):
    ste.st_pyecharts(wf)
 
 def zz(word,number):
-    n = len(number)
-    angles = [i * 2 * math.pi / n for i in range(n)]
-    angles.append(angles[0])
-    number.append(number[0])
-    fig = plt.figure()
-    ax = fig.add_subplot(111, polar=True)
-    ax.plot(angles, number)
-    ax.fill(angles, number, alpha=0.3)
-    ax.set_thetagrids([a * 180 / math.pi for a in angles[:-1]], word)
-    ax.grid(True)
-    ax.plot(angles, number, 'o', linewidth=2)
-    ax.plot(angles, number, color='r', linewidth=2)
-    st.pyplot(fig)
+   radar = Radar()
+   radar.add_schema(
+       schema=[opts.RadarIndicatorItem(name=str(i), max_=20) for i in word]      
+)
+   radar.add('',[number])
+   radar.set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+   radar.set_global_opts(title_opts=opts.TitleOpts('雷达图'))
+   radar.render_notebook()
+   ste.st_pyecharts(radar)
 
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
