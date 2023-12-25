@@ -34,6 +34,7 @@ def index_soup(soup):
     items.sort(key=lambda x: x[1], reverse=True)
     word=[key for key, value in items[:20:]]
     number= [value for key, value in items[:20:]]
+    mpl.font_manager.fontManager.addfont('字体/SimHei.ttf') #临时注册新的全局字体
     plt.rcParams["font.sans-serif"]=["SimHei"] #设置字体
     plt.rcParams["axes.unicode_minus"]=False #该语句解决图像中的“-”负号的乱码问题
     plot_types = ("折线图","柱状图","饼状图" ,"散点图","词云图","漏斗图","蜘蛛图") # 选择绘制的图表种类 
