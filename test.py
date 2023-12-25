@@ -15,6 +15,7 @@ from matplotlib.font_manager import FontProperties
 import streamlit_echarts as ste
 from pyecharts import options as opts
 import re
+import matplotlib as mpl
 
 def index_soup(soup):
     content=soup.find("body")
