@@ -7,7 +7,8 @@ import csv
 import math
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from pyecharts.charts import WordCloud,Funnel,Line,Bar
+from pyecharts.charts import WordCloud,Funnel,Line,Bar,Pie
+from pyecharts.faker import Faker
 from pyecharts.options import LabelOpts
 import numpy as np
 import seaborn as sns
@@ -86,14 +87,6 @@ def zhexian(word,number):
     line_chart.set_global_opts(title_opts=opts.TitleOpts(title="折线图"))
     ste.st_pyecharts(line_chart)
 
-
-# def zx(word,number):
-#     fig=plt.figure()
-#     ax = plt.subplot(1, 1, 1)
-#     plt.title("柱状图")
-#     ax.bar(word, number, width=0.3, color='blue')
-#     st.pyplot(fig)
-#     st.button("Re-run")
 def zx(word,number):
     bar = Bar()
     #添加x轴数据
@@ -107,24 +100,17 @@ def zx(word,number):
     ste.st_pyecharts(bar)
 
 def bz(word,number):
-    fig=plt.figure()
-    plt.title("饼状图")
-    y = np.array(number)
-    plt.pie(y,
-        labels=word,  # 设置饼图标签
-        colors=["#d5695d", "#5d8ca8", "#65a479", "#a564c9","#5a64c9","#2164c9","#d5695d", "#5d8ca8", "#65a479", "#a564c9","#5a64c9","#2164c9","#d5695d", "#5d8ca8", "#65a479", "#a564c9","#5a64c9","#2164c9", "#5d8ca8", "#65a479"],  # 设置饼图颜色
-        explode=(0.2, 0, 0, 0, 0, 0,0,0,0,0,0, 0, 0, 0, 0, 0,0,0,0,0,),  # 第一部分突出显示，值越大，距离中心越远
-        autopct='%.2f%%',  # 格式化输出百分比
-        )
-    st.pyplot(fig)
-    st.button("Re-run")
+    pie = Pie()
+    pie.add('',[list(z) for z in zip(word,number)])
+    ste.st_pyecharts(pie)
 
 def sd(word,number):
    fig=plt.figure()
    plt.title("散点图")
    plt.scatter(word,number)
    st.pyplot(fig)
-   st.button("Re-run")
+   
+
 
 def cy(data):
     wc=WordCloud()
@@ -135,7 +121,6 @@ def ld(word,number):
    wf = Funnel()
    wf.add('漏斗图',[list(z) for z in zip(word, number)])
    ste.st_pyecharts(wf)
-   st.button("Re-run")
 
 def zz(word,number):
     n = len(number)
@@ -151,7 +136,6 @@ def zz(word,number):
     ax.plot(angles, number, 'o', linewidth=2)
     ax.plot(angles, number, color='r', linewidth=2)
     st.pyplot(fig)
-    st.button("Re-run")
 
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
