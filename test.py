@@ -7,7 +7,8 @@ import csv
 import math
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from pyecharts.charts import WordCloud,Funnel,Line
+from pyecharts.charts import WordCloud,Funnel,Line,Bar
+from pyecharts.options import LabelOpts
 import numpy as np
 import seaborn as sns
 import pandas as pd
@@ -75,12 +76,6 @@ def index_soup(soup):
             else:
                 continue
 
-# def zhexian(word,number):
-#     fig=plt.figure()
-#     plt.title("折线图")
-#     plt.plot(word, number, 'b', marker='.', markersize=10)
-#     st.pyplot(fig)
-#     st.button("Re-run")
 def zhexian(word,number):
     line_chart = Line()
     # 添加x轴坐标
@@ -92,14 +87,25 @@ def zhexian(word,number):
     ste.st_pyecharts(line_chart)
 
 
+# def zx(word,number):
+#     fig=plt.figure()
+#     ax = plt.subplot(1, 1, 1)
+#     plt.title("柱状图")
+#     ax.bar(word, number, width=0.3, color='blue')
+#     st.pyplot(fig)
+#     st.button("Re-run")
 def zx(word,number):
-    fig=plt.figure()
-    ax = plt.subplot(1, 1, 1)
-    plt.title("柱状图")
-    ax.bar(word, number, width=0.3, color='blue')
-    st.pyplot(fig)
-    st.button("Re-run")
-   
+    bar = Bar()
+    #添加x轴数据
+    bar.add_xaxis(word)
+    #添加y轴数据
+    #通过使用label_opts=LabelOpts(position='right')使数值标签显示在柱状图的右侧
+    bar.add_yaxis('',number,label_opts=LabelOpts(position='right'))
+    #通过使用reversal_axis()函数反转x，y轴
+    bar.reversal_axis()
+    #绘制柱状图
+    ste.st_pyecharts(bar)
+
 def bz(word,number):
     fig=plt.figure()
     plt.title("饼状图")
